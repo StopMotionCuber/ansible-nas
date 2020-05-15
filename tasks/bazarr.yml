@@ -28,3 +28,8 @@
       traefik.frontend.rule: "Host:{{ bazarr_subdomain }}.{{ ansible_nas_domain }}"
       traefik.enable: "{{ bazarr_available_externally }}"
       traefik.port: "6767"
+      {% if authelia_enabled %}
+      traefik.frontend.auth.forward.address: "http://localhost:{{ authelia_port }}/api/verify?rd=https://{{ authelia_subdomain }}.{{ ansible_nas_domain }}/"
+      traefik.frontend.auth.forward.trustForwardHeader: "true"
+      traefik.frontend.auth.forward.authResponseHeaders: "Remote-User,Remote-Groups"
+      {% endif %}

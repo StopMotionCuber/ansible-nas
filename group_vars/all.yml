@@ -837,6 +837,16 @@ bitwarden_admin_token: qwertyuiop1234567890poiuytrewq0987654321
 # Target just Bitwarden by running: ansible-playbook -i inventory nas.yml -b -K -t bitwarden
 bitwarden_allow_signups: false
 
+
+###
+### Authelia
+###
+authelia_subdomain: "login"
+authelia_enabled: "false"
+authelia_data_directory: "{{ docker_home }}/authelia"
+authelia_port: "6123"
+
+
 ###
 ### Firefly
 ###

@@ -179,6 +179,7 @@ onDemand = false # create certificate when container is created
 
 
   sans = [{% if airsonic_available_externally == "true" %}"{{ airsonic_subdomain }}.{{ ansible_nas_domain }}",{% endif %}
+{% if authelia_enabled == "true" %}"{{ authelia_subdomain }}.{{ ansible_nas_domain }}",{% endif %}
 {% if bazarr_available_externally == "true" %}"{{ bazarr_subdomain }}.{{ ansible_nas_domain }}",{% endif %}
 {% if bitwarden_available_externally == "true" %}"{{ bitwarden_subdomain }}.{{ ansible_nas_domain }}",{% endif %}
 {% if calibre_available_externally == "true" %}"{{ calibre_subdomain }}.{{ ansible_nas_domain }}",{% endif %}

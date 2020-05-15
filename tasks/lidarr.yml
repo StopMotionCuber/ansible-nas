@@ -26,3 +26,8 @@
       traefik.frontend.rule: "Host:{{ lidarr_subdomain }}.{{ ansible_nas_domain }}"
       traefik.enable: "{{ lidarr_available_externally }}"
       traefik.port: "8686"
+      {% if authelia_enabled %}
+      traefik.frontend.auth.forward.address: "http://localhost:{{ authelia_port }}/api/verify?rd=https://{{ authelia_subdomain }}.{{ ansible_nas_domain }}/"
+      traefik.frontend.auth.forward.trustForwardHeader: "true"
+      traefik.frontend.auth.forward.authResponseHeaders: "Remote-User,Remote-Groups"
+      {% endif %}
