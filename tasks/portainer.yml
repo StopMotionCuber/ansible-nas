@@ -9,9 +9,7 @@
 - name: Portainer Docker Container
   docker_container:
     name: portainer
-    {% if authelia_enabled %}
-    command: "--no-auth"
-    {% endif %}
+    command: "{{ omit if authelia_enabled != true or '--no-auth' }}"
     image: portainer/portainer
     pull: true
     volumes:
@@ -27,8 +25,6 @@
       traefik.frontend.rule: "Host:{{ portainer_subdomain }}.{{ ansible_nas_domain }}"
       traefik.enable: "{{ portainer_available_externally }}"
       traefik.port: "9000"
-      {% if authelia_enabled %}
-      traefik.frontend.auth.forward.address: "http://localhost:{{ authelia_port }}/api/verify?rd=https://{{ authelia_subdomain }}.{{ ansible_nas_domain }}/"
-      traefik.frontend.auth.forward.trustForwardHeader: "true"
-      traefik.frontend.auth.forward.authResponseHeaders: "Remote-User,Remote-Groups"
-      {% endif %}
+      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != true or 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
+      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != true or 'true' }}"
+      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != true or 'Remote-User,Remote-Groups' }}"
