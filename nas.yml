@@ -178,7 +178,7 @@
 
   - import_tasks: tasks/authelia.yml
     when: (authelia_enabled | default(False))
-    tags: keycloak
+    tags: authelia
 
   - import_tasks: tasks/nzbget.yml
     when: (nzbget_enabled | default(False))
