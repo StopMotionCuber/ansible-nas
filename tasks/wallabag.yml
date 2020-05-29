@@ -24,8 +24,8 @@
       traefik.frontend.rule: "Host:{{ wallabag_subdomain }}.{{ ansible_nas_domain }}"
       traefik.enable: "{{ wallabag_available_externally }}"
       traefik.port: "80"
-      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != true or 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
-      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != true or 'true' }}"
-      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != true or 'Remote-User,Remote-Groups' }}"
+      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != 'true' else 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
+      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != 'true' else 'true' }}"
+      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != 'true' else 'Remote-User,Remote-Groups' }}"
       traefik.frontend.headers.SSLRedirect: "true"
     memory: 1g

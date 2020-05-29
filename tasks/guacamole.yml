@@ -44,9 +44,9 @@
       traefik.frontend.rule: "Host:{{ guacamole_subdomain }}.{{ ansible_nas_domain }}"
       traefik.enable: "{{ guacamole_available_externally }}"
       traefik.port: "8080"
-      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != true or 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
-      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != true or 'true' }}"
-      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != true or 'Remote-User,Remote-Groups' }}"
+      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != 'true' else 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
+      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != 'true' else 'true' }}"
+      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != 'true' else 'Remote-User,Remote-Groups' }}"
 
 - name: Restart Guacamole Container
   docker_container:

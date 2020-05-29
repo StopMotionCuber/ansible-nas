@@ -20,11 +20,14 @@
       - "{{ transmission_config_directory }}:/config:rw"
       - "{{ transmission_watch_directory }}:/watch:rw"
       - "/etc/timezone:/etc/timezone:ro"
+      - "/tank/docker/transmission/custom:/etc/openvpn/custom"
     ports:
       - "{{ transmission_openvpn_webui_port }}:9091"
       - "{{ transmission_openvpn_external_port }}:51413"
       - "{{ transmission_openvpn_external_port }}:51413/udp"
       - "{{ transmission_openvpn_proxy_port }}:3128"
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: "0"
     env:
       TRANSMISSION_HOME: "/config"
       TRANSMISSION_DOWNLOAD_DIR: "/downloads"
@@ -42,6 +45,9 @@
       PGID: "{{ transmission_group_id }}"
       LOCAL_NETWORK: "{{ transmission_local_network }}"
       ENABLE_UFW: "false"
+    dns_servers:
+      - 8.8.8.8
+      - 8.8.4.4
     devices:
       - /dev/net/tun
     capabilities:
@@ -53,6 +59,6 @@
       traefik.frontend.rule: "Host:{{ transmission_with_openvpn_subdomain }}.{{ ansible_nas_domain }}"
       traefik.enable: "{{ transmission_with_openvpn_available_externally }}"
       traefik.port: "9091"
-      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != true or 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
-      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != true or 'true' }}"
-      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != true or 'Remote-User,Remote-Groups' }}"
+      traefik.frontend.auth.forward.address: "{{ omit if authelia_enabled != 'true' else 'http://localhost:' + authelia_port + '/api/verify?rd=https://' + authelia_subdomain + '.' + ansible_nas_domain + '/' }}"
+      traefik.frontend.auth.forward.trustForwardHeader: "{{ omit if authelia_enabled != 'true' else 'true' }}"
+      traefik.frontend.auth.forward.authResponseHeaders: "{{ omit if authelia_enabled != 'true' else 'Remote-User,Remote-Groups' }}"
